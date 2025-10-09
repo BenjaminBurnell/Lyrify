@@ -41,7 +41,7 @@ Lyrify uses the **Spotify Web API** for authentication and song data, and the **
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/Lyrify.git
+git clone https://github.com/BenjaminBurnell/Lyrify
 cd Lyrify
 ```
 
