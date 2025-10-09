@@ -1,10 +1,7 @@
 # Lyrify
 
 ## Demo
-<video width="600" controls>
-  <source src="https://www.dropbox.com/scl/fi/tjch7vrrsciee86nmrguy/Screen-Recording-2025-10-09-162838.mp4?rlkey=2wlpxwbhz0fpnbqduse8mzq06&st=j5nh78d1&dl=1" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<img src="https://s1.ezgif.com/tmp/ezgif-11c43742c18440.gif"></img>
 
 
 ## Overview
