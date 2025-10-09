@@ -49,7 +49,7 @@ cd Lyrify
 Just open `index.html` in your browser — no server setup or build step required!
 
 > **If deploying to GitHub Pages:**  
-> Update your redirect URI inside `index.html` to match your repository link:
+> Update your redirect URI inside `script.js` to match your repository link:
 ```js
 const REDIRECT_URI = 'https://yourusername.github.io/Lyrify/';
 ```
@@ -62,7 +62,7 @@ const REDIRECT_URI = 'https://yourusername.github.io/Lyrify/';
 ```js
 https://yourusername.github.io/Lyrify/
 ```
-5. Copy your **Client ID** and replace it in the script section of your `index.html` file:
+5. Copy your **Client ID** and replace it in the script section of your `script.js` file:
 ```js
 const CLIENT_ID = 'YOUR_CLIENT_ID';
 ```
