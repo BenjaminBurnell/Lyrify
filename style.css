@@ -1,0 +1,740 @@
+/* General Reset & Typography */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* NEW: Define CSS Variables for dynamic coloring and image mask */
+:root {
+    --accent-color: #1DB954; /* Default Spotify Green (RGB 29, 185, 84) */
+    --accent-shadow: rgba(29, 185, 84, 0.8);
+    --album-art-url: url('https://placehold.co/800x800/1DB954/ffffff?text=Lyrify'); /* Default placeholder */
+    --lyric-background-start: #121212;
+    --lyric-background-end: #1e1e1e;
+    --sidebar-width: 300px; /* NEW: Define sidebar width */
+    --sidebar-color: #1e1e1e; /* NEW: Sidebar background color */
+}
+
+body {
+    cursor: none;
+    font-family: 'Inter', sans-serif;
+    user-select: none;
+    background-color: #000000; /* Deep black background */
+    color: #ffffff;
+    min-height: 100vh;
+    /* CRITICAL FIX: Ensure body centers content */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Prevent body scroll for app-like feel */
+}
+
+/* Spotify Aesthetics - Now using CSS Variable */
+.spotify-green {
+    background-color: var(--accent-color);
+    transition: background-color 0.15s ease, transform 0.2s ease;
+}
+.spotify-green:hover {
+    /* This hover color should ideally be a slightly lighter version of the accent color, but we'll stick to fixed for simplicity */
+    /* background-color: #1ed760;  */
+    transform: scale(1.02);
+}
+
+/* Utility Classes for JS Transitions */
+.hidden {
+    display: none !important;
+}
+.text-center {
+    text-align: center;
+}
+.text-left {
+    text-align: left;
+}
+
+/* Pulse Animation */
+.pulse-icon {
+    animation: pulse 1s infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.05); }
+}
+
+/* --- LANDING PAGE STYLES (Phase 1) --- */
+#login-section {
+    border-radius: 0.75rem;
+    max-width: 420px; 
+    width: 90%; 
+    background: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+    padding: 3rem;
+    opacity: 1;
+    transition: opacity 0.5s ease-in;
+    margin: auto; /* CRITICAL FIX: Ensure perfect centering */
+    z-index: 10;
+    position: absolute;
+    left:50%;
+    top:50%;
+    transform: translate(-50%, -50%);
+}
+#login-section h1 {
+    font-size: 3.75rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: #ffffff;
+}
+#login-message {
+    font-size: 1.25rem;
+    color: #9ca3af; 
+    margin-bottom: 2rem;
+}
+#login-button {
+    padding: 1rem 2.5rem;
+    border-radius: 9999px;
+    width: 100%;
+    max-width: 24rem; 
+    color: #000000;
+    font-weight: 700;
+    border: none;
+    cursor: none;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+#login-button:hover {
+    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.4), 0 8px 10px rgba(0, 0, 0, 0.1);
+}
+#login-button-text {
+    font-size: 1.5rem;
+}
+#login-section > p:last-child {
+    font-size: 0.75rem;
+    color: #6b7280; 
+    margin-top: 1.5rem;
+}
+
+/* --- NEW: SETTINGS BUTTON & SIDEBAR STYLES --- */
+
+/* Settings Button (Hamburger Icon) - Initial placement */
+#settings-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001; /* Above media-column/lyrics */
+    background-color: rgba(60, 60, 60, 0.5);
+    backdrop-filter: blur(.5rem);
+    border: none;
+    border-radius: 0.5rem;
+    color: white;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex; /* For icon alignment */
+    align-items: center;
+    justify-content: center;
+}
+
+#settings-button:hover {
+    background-color: rgba(90, 90, 90, 0.7);
+}
+
+/* NEW: Button inside the sidebar (used for closing) */
+#close-sidebar-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #9ca3af;
+    padding: 0.5rem;
+    cursor: pointer;
+    z-index: 1002;
+}
+
+#close-sidebar-button:hover {
+    color: #ffffff;
+}
+
+#settings-icon, #close-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Sidebar Container */
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-color);
+    transform: translateX(-100%); /* Start hidden */
+    transition: transform 0.3s ease-out;
+    z-index: 1000;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    padding-top: 4rem; /* Add padding for the close button at the top */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Space between h2 and selection section */
+}
+
+#sidebar.open {
+    transform: translateX(0); /* Slide in */
+}
+
+/* Sidebar Backdrop (for mobile/tablet overlay) */
+#sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter:blur(.5rem);
+    z-index: -1;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+}
+
+#sidebar.open ~ #sidebar-backdrop {
+    opacity: 1;
+    z-index: 999;
+    visibility: visible;
+}
+
+/* Styles for the content within the sidebar */
+#sidebar h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    /* margin-bottom: 1.5rem; */ /* Removed margin-bottom here, using gap on #sidebar */
+    padding-top: 0.5rem;
+}
+
+/* --- NEW: STYLE PREVIEW CARDS STYLES --- */
+#style-selection-section {
+    width: 100%;
+    max-width: none !important; 
+    text-align: left;
+    padding-top: 0.5rem; /* Reduced padding from previous version */
+    border-top: 1px solid #333;
+}
+
+#style-previews-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; /* Space between individual cards */
+    margin-top: 0.5rem;
+}
+
+.style-preview-card {
+    background-color: #2a2a2a; /* Card background */
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.style-preview-card:hover {
+    background-color: #383838;
+    border-color: #555555;
+}
+
+.style-preview-card.selected {
+    border-color: var(--accent-color); /* Highlight selected card with accent color */
+    box-shadow: 0 0 10px rgba(29, 185, 84, 0.5); /* Accent glow */
+    background-color: #333333;
+}
+
+.card-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    pointer-events: none; /* Ignore clicks on text */
+}
+
+.card-preview-box {
+    height: 100px; /* Fixed height for the preview area */
+    background-color: #121212;
+    border-radius: 0.3rem;
+    padding: 15px 25px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    pointer-events: none; /* Ignore clicks on preview box */
+    transform-style: preserve-3d; /* For 3D Scatter effect */
+    perspective: 150px; /* For 3D Scatter effect */
+}
+
+/* --- Mock Lyric Base Styles --- */
+.mock-lyric-line {
+    font-size: 0.6rem;
+    color: #7d7d7d;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 90%;
+    text-align: center;
+    line-height: 1.2;
+    margin: 0;
+    position: relative;
+}
+
+.mock-lyric-line.mock-active {
+    font-weight: 700;
+    color: #ffffff;
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* --- Mock Style Specifics --- */
+
+/* Centered Scroll Mock */
+.centered-scroll-mock:nth-child(1) { transform: translateY(-3px); }
+.centered-scroll-mock.mock-active { transform: scale(1.1) translateY(0); }
+.centered-scroll-mock:nth-child(3) { transform: translateY(3px); }
+
+/* Explosion Pop Mock */
+.explosion-pop-mock:nth-child(1) { transform: scale(0.9) translateX(-10px); opacity: 0.2; }
+.explosion-pop-mock.mock-active { transform: scale(1.1); }
+.explosion-pop-mock:nth-child(3) { transform: scale(0.9) translateX(10px); opacity: 0.2; }
+
+/* Fade Mock */
+.card-preview-box:has(.fade-mock) { display: block; } /* Override flex centering for fade */
+.fade-mock {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+}
+.fade-mock.mock-active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+    z-index: 10;
+}
+
+/* 3D Scatter Mock */
+.card-preview-box:has(.scatter-mock) { 
+    justify-content: flex-start; /* Reset vertical centering */
+}
+.scatter-mock:nth-child(1) { transform: translateZ(-50px) scale(0.8); opacity: 0.2; }
+.scatter-mock.mock-active { transform: translateZ(0) scale(1.1); }
+.scatter-mock:nth-child(3) { transform: translateZ(30px) scale(0.9); opacity: 0.4; }
+/* --- END NEW STYLE PREVIEW CARDS STYLES --- */
+
+
+/* --- POST-LOGIN LYRICS PAGE STYLES (Phase 2) --- */
+
+/* NEW: Wrapper for the main content to allow smooth shifting */
+#main-content-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    transition: transform 0.3s ease-out; /* Smooth movement */
+}
+
+/* NEW: Shift content when sidebar is open on desktop */
+.sidebar-shift #main-content-wrapper {
+        transform: translateX(var(--sidebar-width)); 
+}
+
+#status-section {
+    width: 100%;
+    height: 100vh;
+    max-width: none;
+    position:absolute;
+    top:0px;
+    left:0px;
+}
+
+/* ADDED: Perspective for 3D transforms to work */
+#lyrics-column {
+    height: 100vh;
+    width:100vw;
+    overflow:hidden;
+    perspective: 800px; 
+}
+
+.lyrics-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 2rem;
+    text-align: center;
+    overflow: hidden; 
+    transition:.25s;
+    position: relative; 
+}
+
+/* ADDED: Preserve 3D space for child elements */
+.lyrics-box {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden; 
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    transform-style: preserve-3d; 
+}
+
+/* Base Lyric Line Style (Centered Scroll Default) */
+.lyric-line {
+    line-height: 1.5;
+    color: #7d7d7d; /* Muted gray for non-active lines */
+    font-size: 25px; 
+    font-weight: 500;
+    padding: 0.75rem 0;
+    opacity:0;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform: scale(1) translateY(10px); 
+    text-shadow: none;
+    white-space: pre-wrap;
+    box-sizing: border-box; 
+    margin-left: auto; 
+    margin-right: auto;
+    max-width: calc(100vw - 50px); 
+    transition: 0.25s;
+}
+
+/* Active Lyric Line Style (Album Art Mask + Glow) */
+.lyric-line.active {
+    font-weight: 800;
+    opacity: 1;
+    /* transform: scale(1.25) translateY(0);  -- REMOVED. Active transforms are style-specific */
+
+    /* 1. Apply Text-as-Image Effect */
+    color: white; /* Makes the text transparent */
+    -webkit-background-clip: text; /* Clips the background to the text shape (for Chrome/Safari) */
+    background-clip: text; /* Standard CSS */
+
+    /* 2. Set the Album Art as the Background */
+    /* background-image: var(--album-art-url); 
+    background-size: 100vw 100vh;
+    background-position: center center;
+    background-position-x: 0px;
+    background-position-y: 0px; */
+    
+    filter: brightness(100%);
+    transition: 0.25s;
+}
+
+/* --- Explosion Pop Style --- */
+
+/* Specific styling for inactive lines in Explosion Pop */
+.lyric-line.explosion-pop:not(.active) {
+    opacity:0.15;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.lyric-line.explosion-pop.active {
+    opacity:1;
+    transform: scale(1.25) translateY(0) translateX(0) !important; /* Force reset X and apply base scale */
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* --- Fade Style --- */
+
+/* Specific styling for inactive lines in Fade Style */
+.lyric-line.fade:not(.active) {
+    position:fixed;
+    top:50%;
+    left:50%;
+    text-align: center;
+    transition: 0.25s;
+    z-index: 1;
+    transform: scale(1) translate(-50%, -50%); /* Remove scale/transform for this style */
+}
+
+/* Specific styling for active lines in Fade Style */
+.lyric-line.fade.active {
+    position:fixed;
+    top:50%;
+    left:50%;
+    opacity: 1; 
+    text-align: center;
+    z-index: 150;
+    transform: scale(1) translate(-50%, -50%); /* Keep it stable and centered */
+    transition: 0.25s;
+}
+
+/* --- 3D SCATTER Style (Permanent Z) --- */
+
+/* Specific styling for inactive lines in 3D Scatter */
+.lyric-line.three-d-scatter:not(.active) {
+    opacity: 0.15;
+    transition: all 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* Transform set by JS for random Z, Scale, and rotation */
+}
+
+/* Specific styling for active lines in 3D Scatter - Only apply scale and rotation to center on-plane */
+.lyric-line.three-d-scatter.active {
+    opacity: 1;
+    /* The random translateZ() from JS will persist */
+    transform: scale(1.2) rotateX(0deg) rotateY(0deg); 
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+
+/* Media Column Styles */
+#status-message {
+    font-size: 1.25rem; 
+    font-weight: 600; 
+    margin-bottom: 1rem; 
+    color: #ffffff;
+    width: 100%;
+}
+
+#song-display {
+    display:flex;
+    align-items:center;
+    gap: 10px;
+}
+
+#album-art {
+    width: 95px;
+    height: 95px;
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0px 100px 50px rgba(0, 0, 0, 0.7);
+    transform: scale(1);
+    transition: all 0.5s ease;
+    z-index: -1;
+}
+
+#song-display > p:nth-of-type(1) { 
+    font-size: 0.875rem;
+    color: #9ca3af;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+#song-Info-Text {
+    width:350px;
+}
+
+#song-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    white-space: nowrap; 
+    overflow: hidden;    
+    text-overflow: ellipsis;
+}
+
+#artist-name {
+    font-size: 1rem;
+    color: #d1d5db;
+    white-space: nowrap; 
+    overflow: hidden;    
+    text-overflow: ellipsis; 
+}
+
+#album-name {
+    font-size: 1rem;
+    color: #6b7280;
+    white-space: nowrap; 
+    overflow: hidden;    
+    text-overflow: ellipsis; 
+}
+
+/* Progress Bar - Uses accent-color */
+#progress-bar-container {
+    height: 0.5rem;
+    background-color: #1f2937; 
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-top: -15px;
+}
+
+#progress-bar {
+    height: 100%;
+    transition: width 0.3s linear;
+}
+
+#time-text {
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-family: monospace;
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom:15px;
+}
+
+/* Polling Indicator */
+#polling-indicator {
+    margin-top: 2rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+#polling-indicator svg {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    display: inline-block;
+    color: var(--accent-color); /* Dynamic Color */
+}
+
+
+/* Desktop/Large Screen Layout (min-width: 1024px) */
+@media (min-width: 1024px) {
+    
+    /* Sidebar position is now handled by the #sidebar element, not this section */
+    #style-selection-section {
+        /* Removed previous fixed positioning */
+        padding: 1rem;
+        height: auto;
+        background: none;
+        backdrop-filter: none;
+        box-shadow: none;
+        width: 100%; /* Take full width of sidebar */
+        border-radius: 0;
+        position: static;
+        left: auto;
+        bottom: auto;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .media-column {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 3rem;
+        height: calc(100vh - 50px);
+        max-height:160px;
+        background: rgba(60, 60, 60, 0.5); 
+        backdrop-filter: blur(.5rem);
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.4);
+        width: 500px; 
+        border-radius: 0.75rem;
+        position:absolute;
+        bottom:25px;
+        right:25px;
+        z-index: 2;
+    }
+
+    #song-display {
+        max-width: none; 
+    }
+
+    .lyrics-column {
+        padding-left: 5%;
+        padding-right: 5%;
+        height: 100vh;
+        overflow-y: hidden;
+    }
+}
+
+/* Mobile Layout Adjustments (max-width: 1023px) */
+@media (max-width: 1023px) {
+    #status-section {
+        padding: 0; /* Remove padding from status-section */
+        overflow-y: hidden; /* Hide scroll on main section when sidebar is closed */
+        display: block; 
+    }
+    .media-column {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        max-height: 150px;
+        background: linear-gradient(0deg, #121212 0%, #1e1e1e 100%);
+        box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.4);
+        z-index: 50; /* Ensure it is above main lyrics column */
+        padding: 1rem;
+    }
+
+    .lyrics-column {
+        height: 100vh;
+        padding-bottom: 150px; /* Space for fixed media column */
+        padding-top: 50px; /* Space for settings button area */
+    }
+    
+    .lyrics-box {
+        height: 100%; 
+    }
+    .lyric-line.active {
+        font-size: 2.25rem;
+    }
+    .lyric-line {
+        font-size: 1.1rem;
+    }
+    
+    /* Sidebar on mobile: Full height, full screen overlay */
+    #sidebar {
+        width: 80vw; /* Keep it smaller than full screen */
+        max-width: 350px;
+    }
+    
+    /* Hide the shift class on mobile so content doesn't move */
+    .sidebar-shift #main-content-wrapper {
+            transform: translateX(0); 
+    }
+}
+
+::-webkit-scrollbar {
+    width:0px;
+    height:0px;
+}
+
+/* Custom Cursor Style (A glowing ring) */
+#custom-cursor {
+    width: 20px;
+    height: 20px;
+    background-color: var(--accent-color); /* Semi-transparent fill */
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none; /* Critical: allows clicks on elements underneath */
+    /* Initial transform: translate(-50%, -50%) centers the cursor element */
+    transform: translate(-50%, -50%); 
+    /* Transition on transform for high-performance smooth movement */
+    transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.4, 1);
+    z-index: 9999;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Soft glow matching the accent color */
+}
+
+#custom-cursor.hover-target {
+    transform: translate(-50%, -50%) scale(1.5); /* Example: make it bigger */
+    background-color: white; /* Example: change the color */
+
+    /* CRITICAL FOR TEXT INVERSION */
+    mix-blend-mode: difference; 
+}
+
+/* 2. Isolation for Text/Interactive Elements */
+/* Ensures text is on its own layer so the mix-blend-mode works cleanly */
+
+/* For links, buttons, and logos */
+a, button, .logo {
+    position: relative;
+    z-index: 1000;
+    isolation: isolate; 
+}
+
+/* For main headings */
+.hero-title, .details-headline, .secondary-headline, h2, h3 {
+    position: relative;
+    z-index: 1000;
+    isolation: isolate; 
+}
