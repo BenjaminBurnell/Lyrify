@@ -1,6 +1,6 @@
 # Lyrify
 
-## Demo
+## Preview
 <img src="https://s1.ezgif.com/tmp/ezgif-11c43742c18440.gif"></img>
 
 
