@@ -46,7 +46,7 @@ cd Lyrify
 ```
 
 ### 2. Open in Your Browser
-Just open `index.html` in your browser — no server setup or build step required!
+Just open `script.js` in your browser — no server setup or build step required!
 
 > **If deploying to GitHub Pages:**  
 > Update your redirect URI inside `script.js` to match your repository link:
