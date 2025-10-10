@@ -1,7 +1,7 @@
 # Lyrify
 
 ## Preview
-<img src="https://s1.ezgif.com/tmp/ezgif-11c43742c18440.gif"></img>
+<img src="https://raw.githubusercontent.com/BenjaminBurnell/Lyrify/refs/heads/main/assets/ezgif-4e32b50b9ea37f.gif"></img>
 
 
 ## Overview
