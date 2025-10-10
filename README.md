@@ -105,6 +105,6 @@ You’re free to use, modify, and distribute this project under the terms of the
 ## Credits
 
 Developed by **Benjamin Burnell**  
-Powered by the **Spotify Web API**, **LRC Lib**, and the love of music
+Powered by the **Spotify Web API** & **LRC Lib**
 
 
