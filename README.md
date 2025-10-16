@@ -86,11 +86,11 @@ const CLIENT_ID = 'YOUR_CLIENT_ID';
 
 ## Future Enhancements
 
-- [ ] Unsynced lyric fallback for missing tracks  
-- [ ] Karaoke microphone mode  
-- [ ] Additional lyric animation effects  
-- [ ] Custom theme and color palette support  
-- [ ] Crossfade lyric transitions  
+- Unsynced lyric fallback for missing tracks  
+- Karaoke microphone mode  
+- Additional lyric animation effects  
+- Custom theme and color palette support  
+- Crossfade lyric transitions  
 
 ---
 
