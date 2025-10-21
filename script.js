@@ -284,6 +284,8 @@ async function fetchSyncedLyrics(trackName, artistName, albumName) {
     let results = null;
 
     try {
+
+        console.log(artistName)
         // --- Query 1: Track + Artist + Album (Most specific) ---
         const url1 = `${LRCLIB_API_BASE}?track_name=${encodeURIComponent(cleanedTrackName)}&artist_name=${encodeURIComponent(artistName)}&album_name=${encodeURIComponent(albumName)}`;
         const response1 = await fetch(url1);
