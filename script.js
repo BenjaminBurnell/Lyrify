@@ -318,15 +318,16 @@ async function fetchSyncedLyrics(trackName, artistName, albumName) {
         }
 
         // --- Query 3: Track only (broadest) ---
-        const url3 = `${LRCLIB_API_BASE}?track_name=${encodeURIComponent(cleanedTrackName)}&limit=3`;
-        const response3 = await fetch(url3);
-        if (response3.ok) {
-            results = await response3.json();
-            if (results && results.length > 0 && results[0].syncedLyrics) {
-                console.log("🎯 Matched by track only:", results[0]);
-                return parseLrc(results[0].syncedLyrics);
-            }
-        }
+        // Pretty Inacurate for specific songs so I commented it out just for now if in the future LRCLIB.net adds a whole bunch of songs feel free to add this in its just for those more niche songs it doesnt have so it finds a song on there with the same name
+        // const url3 = `${LRCLIB_API_BASE}?track_name=${encodeURIComponent(cleanedTrackName)}&limit=3`;
+        // const response3 = await fetch(url3);
+        // if (response3.ok) {
+        //     results = await response3.json();
+        //     if (results && results.length > 0 && results[0].syncedLyrics) {
+        //         console.log("🎯 Matched by track only:", results[0]);
+        //         return parseLrc(results[0].syncedLyrics);
+        //     }
+        // }
 
         console.warn(`❌ No synced lyrics found after all attempts for "${trackName}"`);
         return null;
