@@ -747,7 +747,7 @@ function updateLyricStyle(newStyle) {
 // --- Main Initialization ---
 
 async function init() {
-    fetchSyncedLyrics("Promises", "Maverick City Music & ")
+    // fetchSyncedLyrics("Promises", "Maverick City Music & ")
     
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
