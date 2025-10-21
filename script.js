@@ -272,45 +272,70 @@ function parseLrc(lrcContent) {
 
 // --- Lyrics Management (LRC Lib Integration) ---
 
-/** Fetches synchronized lyrics from LRC Lib using cleaned track name and artist. */
-async function fetchSyncedLyrics(trackName, artistName) {
-    lyricsContent.innerHTML = '<p style="color:#9ca3af; font-style:italic; font-size:1.5rem; margin-top:1rem; text-align:center;">Fetching synchronized lyrics...</p>';
+/** Fetches synchronized lyrics from LRC Lib using cleaned track, artist, and album info. */
+async function fetchSyncedLyrics(trackName, artistName, albumName) {
+    lyricsContent.innerHTML = `
+        <p style="color:#9ca3af; font-style:italic; font-size:1.5rem; margin-top:1rem; text-align:center;">
+            Fetching synchronized lyrics...
+        </p>
+    `;
     
     const cleanedTrackName = cleanTrackTitle(trackName);
     let results = null;
-    
-    // Query 1: Cleaned Track Name + Artist Name (Most accurate)
-    let url1 = `${LRCLIB_API_BASE}?track_name=${encodeURIComponent(cleanedTrackName)}&artist_name=${encodeURIComponent(artistName)}&limit=1`;
-    
+
     try {
+        // --- Query 1: Track + Artist + Album (Most specific) ---
+        const url1 = `${LRCLIB_API_BASE}?track_name=${encodeURIComponent(cleanedTrackName)}&artist_name=${encodeURIComponent(artistName)}&album_name=${encodeURIComponent(albumName)}&limit=5`;
         const response1 = await fetch(url1);
         if (response1.ok) {
             results = await response1.json();
-            if (results && results.length > 0 && results[0].syncedLyrics) {
-                return parseLrc(results[0].syncedLyrics);
+            if (results && results.length > 0) {
+                // Prefer exact matches on artist and album
+                const exactMatch = results.find(
+                    r =>
+                        r.artistName?.toLowerCase() === artistName.toLowerCase() &&
+                        r.albumName?.toLowerCase() === albumName.toLowerCase()
+                );
+                if (exactMatch && exactMatch.syncedLyrics) {
+                    console.log("🎯 Matched by track + artist + album:", exactMatch);
+                    return parseLrc(exactMatch.syncedLyrics);
+                }
             }
         }
-        
-        // Fallback Query 2: Only Cleaned Track Name (Broader search)
-        let url2 = `${LRCLIB_API_BASE}?track_name=${encodeURIComponent(cleanedTrackName)}&limit=1`;
-        const response2 = await fetch(url2);
 
+        // --- Query 2: Track + Artist (next best) ---
+        const url2 = `${LRCLIB_API_BASE}?track_name=${encodeURIComponent(cleanedTrackName)}&artist_name=${encodeURIComponent(artistName)}&limit=5`;
+        const response2 = await fetch(url2);
         if (response2.ok) {
             results = await response2.json();
+            if (results && results.length > 0) {
+                const match = results.find(r => r.syncedLyrics);
+                if (match) {
+                    console.log("🎯 Matched by track + artist:", match);
+                    return parseLrc(match.syncedLyrics);
+                }
+            }
+        }
+
+        // --- Query 3: Track only (broadest) ---
+        const url3 = `${LRCLIB_API_BASE}?track_name=${encodeURIComponent(cleanedTrackName)}&limit=3`;
+        const response3 = await fetch(url3);
+        if (response3.ok) {
+            results = await response3.json();
             if (results && results.length > 0 && results[0].syncedLyrics) {
+                console.log("🎯 Matched by track only:", results[0]);
                 return parseLrc(results[0].syncedLyrics);
             }
         }
 
-        console.log(`LRC Lib Failure: No synced result found after 2 attempts for "${trackName}"`);
+        console.warn(`❌ No synced lyrics found after all attempts for "${trackName}"`);
         return null;
-        
+
     } catch (error) {
         console.error("Error fetching lyrics from LRC Lib:", error);
         return null;
     }
 }
-
 
 /** Renders the lyrics lines to the container, or shows a "not available" message. */
 function renderLyrics(lyrics, trackName, artistName) {
@@ -606,7 +631,7 @@ function pollForSong() {
                 document.documentElement.style.setProperty('--album-art-url', `url('${currentAlbumArtUrl}')`);
 
                 // Fetch and render new lyrics
-                currentLyrics = await fetchSyncedLyrics(track.name, artistText);
+                currentLyrics = await fetchSyncedLyrics(track.name, artistText, track.album.name);
                 renderLyrics(currentLyrics, track.name, artistText);
                 
                 // Update Metadata
@@ -722,6 +747,8 @@ function updateLyricStyle(newStyle) {
 // --- Main Initialization ---
 
 async function init() {
+    fetchSyncedLyrics("Promises", "Maverick City Music & ")
+    
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
 
