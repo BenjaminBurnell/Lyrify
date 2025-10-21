@@ -285,7 +285,7 @@ async function fetchSyncedLyrics(trackName, artistName, albumName) {
 
     try {
         // --- Query 1: Track + Artist + Album (Most specific) ---
-        const url1 = `${LRCLIB_API_BASE}?track_name=${encodeURIComponent(cleanedTrackName)}&artist_name=${encodeURIComponent(artistName)}&album_name=${encodeURIComponent(albumName)}&limit=5`;
+        const url1 = `${LRCLIB_API_BASE}?track_name=${encodeURIComponent(cleanedTrackName)}&artist_name=${encodeURIComponent(artistName)}&album_name=${encodeURIComponent(albumName)}`;
         const response1 = await fetch(url1);
         if (response1.ok) {
             results = await response1.json();
@@ -304,7 +304,7 @@ async function fetchSyncedLyrics(trackName, artistName, albumName) {
         }
 
         // --- Query 2: Track + Artist (next best) ---
-        const url2 = `${LRCLIB_API_BASE}?track_name=${encodeURIComponent(cleanedTrackName)}&artist_name=${encodeURIComponent(artistName)}&limit=5`;
+        const url2 = `${LRCLIB_API_BASE}?track_name=${encodeURIComponent(cleanedTrackName)}&artist_name=${encodeURIComponent(artistName)}`;
         const response2 = await fetch(url2);
         if (response2.ok) {
             results = await response2.json();
